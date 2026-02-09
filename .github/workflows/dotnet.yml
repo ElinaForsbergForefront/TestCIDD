@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ClassLibrary1
+        working-directory: backend/ClassLibrary1
 
     steps:
       - uses: actions/checkout@v4
