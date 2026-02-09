@@ -11,8 +11,8 @@ public class ExampleTests
     }
 
     [Test]
-    public void TwoPlusTwo_IsFive()
+    public void TwoPlusTwoPlusOne_IsFive()
     {
-        Assert.That(2 + 2, Is.EqualTo(5));
+        Assert.That(2 + 2 + 1, Is.EqualTo(5));
     }
 }
