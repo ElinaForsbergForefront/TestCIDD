@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+            docker:
+              - 'docker/**'
+              - 'docker-compose*.yml'
+              - '.github/workflows/**'
+
+  # Bygg docker images (dev/test/prod) för frontend/backed när relevant
+  docker-build:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docker == 'true' }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - name: frontend-dev
+            context: ./frontend
+            target: dev
+            tag: testcidd-frontend:dev
+          - name: frontend-test
+            context: ./frontend
+            target: test
+            tag: testcidd-frontend:test
+          - name: frontend-prod
+            context: ./frontend
+            target: prod
+            tag: testcidd-frontend:prod
+
+          - name: backend-dev
+            context: ./backend
+            target: dev
+            tag: testcidd-backend:dev
+          - name: backend-test
+            context: ./backend
+            target: test
+            tag: testcidd-backend:test
+          - name: backend-prod
+            context: ./backend
+            target: prod
+            tag: testcidd-backend:prod
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Caching för snabbare builds
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          target: ${{ matrix.target }}
+          push: false
+          tags: |
+            ${{ matrix.tag }}
+            ${{ matrix.tag }}-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

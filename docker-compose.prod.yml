@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: prod
+    env_file:
+      - ./docker/env/prod.env
+
+  frontend:
+    build:
+      context: ./frontend
+      target: prod
+    env_file:
+      - ./docker/env/prod.env

@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    env_file:
+      - ./docker/env/dev.env
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    volumes:
+      - ./backend:/src
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    env_file:
+      - ./docker/env/dev.env
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules

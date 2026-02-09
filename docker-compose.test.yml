@@ -1,0 +1,16 @@
+services:
+  backend-tests:
+    build:
+      context: ./backend
+      target: test
+    env_file:
+      - ./docker/env/test.env
+    profiles: ["test"]
+
+  frontend-tests:
+    build:
+      context: ./frontend
+      target: test
+    env_file:
+      - ./docker/env/test.env
+    profiles: ["test"]
