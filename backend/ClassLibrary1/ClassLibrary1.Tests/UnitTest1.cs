@@ -9,4 +9,10 @@ public class ExampleTests
     {
         Assert.That(2 + 2, Is.EqualTo(4));
     }
+
+    [Test]
+    public void TwoPlusTwo_IsFive()
+    {
+        Assert.That(2 + 2, Is.EqualTo(5));
+    }
 }
