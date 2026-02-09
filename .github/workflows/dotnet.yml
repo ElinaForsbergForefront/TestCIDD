@@ -84,3 +84,6 @@ jobs:
 
       - name: Test
         run: npm test --if-present
+
+      - name: Docker build (frontend)
+        run: docker build -t testcidd-frontend ./frontend
