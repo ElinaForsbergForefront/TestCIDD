@@ -1,7 +1,12 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+    plugins: [react()],
+    // @ts-expect-error Vitest config option 'test' is not recognized by Vite's types, but required for testing
+    test: {
+        environment: "jsdom",
+        globals: true,
+        setupFiles: "/src/test/vitest.setup.ts",
+    },
+});
